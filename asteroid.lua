@@ -26,6 +26,7 @@ function Asteroid:init( pos )
   self.frames[4] = love.graphics.newQuad(1072,855,1261-1072,1027-855,self.spritesheet:getDimensions())
 
   self.active_frame = self.frames[self.current_frame]
+  
 end
 
 --[[

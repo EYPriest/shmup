@@ -9,6 +9,7 @@ function Bullet:init( pos )
   --self.speed = 1.25 * scale_x
   self.speed = 3 * scale_x
   self.scale = 0.4
+  
 end
 
 function Bullet:update(dt)
@@ -18,7 +19,6 @@ end
 function Bullet:draw()
   --love.graphics.draw( self.sprite, self.pos.x, self.pos.y, )
   love.graphics.draw( self.sprite, self.pos.x, self.pos.y, 0, self.scale*scale_x, self.scale*scale_y )
-  --print 'aaaa'
 end
 
 function Bullet:getColliders()

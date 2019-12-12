@@ -38,24 +38,6 @@ end
 function Asteroid:update(dt)
   
   self.pos.x = self.pos.x - 1
-  --local current_quad = self.quads[self.current_quad]
-  
-  --if ( self.pos.x < 0 - 100 ) then
-    --table.remove( asteroids, self )
-  --end
-  
-  
-  --print( "dt: " .. dt )
-  --[[
-  self.animation_time_accumulator = self.animation_time_accumulator + dt
-  if self.animation_time_accumulator > self.animation_time then
-    self.animation_time_accumulator = self.animation_time_accumulator - self.animation_time
-    self.current_quad = self.current_quad + 1
-    if self.current_quad > #self.quads then
-      self.current_quad = 1
-    end
-  end
-  --]]
   
   self.animation_time_accumulator = self.animation_time_accumulator + dt
   if self.animation_time_accumulator > self.animation_time then

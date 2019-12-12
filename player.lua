@@ -19,7 +19,7 @@ Player.sprites = {}
 Player.spritesheet = nil
 Player.active_sprite = nil
 
-Player.scale = scale_global
+Player.scale = SCALE_GLOBAL
 
 Player.width = 18
 Player.height = 8
@@ -56,9 +56,6 @@ function Player:keypressed(key)
   if key == 'a' then
     Player.accelerating = 1
   end
-  
-  --print(key)
-  
   
 end
 
@@ -154,9 +151,6 @@ function Player.update(dt)
     Player.active_sprite = Player.sprites[1]
   end
   
-  print( scale_x)
-    print( scale_y)
-  
   accel_speed = 10
   max_speed = 300
   
@@ -168,6 +162,9 @@ function Player.update(dt)
   
   accel_speed = 2 * scale_y
   max_speed = 60 * scale_y
+  
+  accel_speed = 6 * scale_y
+  max_speed = 80 * scale_y
   
   --Increase Speed for next time
   if ( Player.accelerating == 1 ) then

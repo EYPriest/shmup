@@ -3,25 +3,35 @@ Vector = require 'hump.vector'
 
 scale_x = love.graphics.getWidth() / 240
 scale_y = love.graphics.getHeight() / 160
-scale_global = scale_x
+SCALE_GLOBAL = scale_x
+
+STATE_ALIVE = 1
+STATE_DYING = 2
+STATE_DEAD = 3
 
 require "player"
 require "asteroid"
 require "asteroid-blue"
 require "bullet"
 
+--TODO: uncapitalize??
 Background = {}
 Background.image = nil
 Background.image_copy = nil
 Background.pos_x = 0
 --Background.scale = 4
 
-asteroids = {}
+--asteroids = {}
+entities_alive = {}
+entities_dying = {}
 asteroid_time_accumulator = 0
 asteroid_spawn_time = 1
 
 bullets = {}
-
+enemies_alive = {}
+enemies_dying = {}
+--obstacles = {}
+--pickups = {}
 
 
 function love.keypressed(key)
@@ -56,8 +66,6 @@ function love.load()
   
   Player.load()
   --Asteroid:load()
-  --a = Asteroid( Vector(100,100) )
-  --b = Asteroid( Vector(200,200) )
   Background.image = love.graphics.newImage("res/parallax-space-backgound.png")
   Background.image_copy = love.graphics.newImage("res/parallax-space-backgound.png")
 end
@@ -68,24 +76,33 @@ function love.update(dt)
   asteroid_time_accumulator = asteroid_time_accumulator + dt
   if ( asteroid_time_accumulator > asteroid_spawn_time ) then
     asteroid_time_accumulator = asteroid_time_accumulator - asteroid_spawn_time
-    table.insert( asteroids, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
+    table.insert( enemies_alive, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
     --table.insert( asteroids, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
   end
   
   --Update Player
   Player.update(dt)
-  --a:update(dt)
-  --b:update(dt)
   
-  --Update Asteroids
-  for i,v in ipairs( asteroids ) do
-    v:update(dt)
-    --print("v.state: "..v.state)
-    if ( v.pos.x < 0 - 100 ) then
-      table.remove(asteroids,i)
+  --Update Enemies
+  --Alive
+  for i,en in ipairs( enemies_alive ) do
+    en:update(dt)
+    if ( en.pos.x < 0 - 100 ) then
+      table.remove(enemies_alive,i)
     end
-    if ( v.state == v.STATE_DEAD ) then
-      table.remove(asteroids,i)
+    if ( en.state == STATE_DEAD ) then
+      table.remove(enemies_alive,i)
+    end
+  end
+  
+  --Dead
+  for i,ed in ipairs( enemies_dying ) do
+    ed:update(dt)
+    if ( ed.pos.x < 0 - 100 ) then
+      table.remove(enemies_dying,i)
+    end
+    if ( ed.state == STATE_DEAD ) then
+      table.remove(enemies_dying,i)
     end
   end
   
@@ -103,48 +120,29 @@ function love.update(dt)
     Background.pos_x = 0
   end
   
-  bullets_to_remove = {}
-  
-   --[[Collision Detection
-  for i,b in ipairs( bullets ) do
-    b_collide = b:getColliders()
-    for j,a in ipairs( asteroids ) do
-      a_collide = a:getColliders()
-        if CheckCollision(a_collide[1],a_collide[2],a_collide[3],a_collide[4],
-                          b_collide[1],b_collide[2],b_collide[3],b_collide[4] ) then
-          --print( "Collision" )
-          a:hit()
-          table.insert(bullets_to_remove,b)
-          break
-        end
-    end
-  end
-  
-  for k,v in ipairs( bullets_to_remove ) do
-    table.remove(bullets, 1)
-  end
-  --]]
-  
+  --bullets_to_remove = {}
   
   --Collision Detection
   for i,b in ipairs( bullets ) do
     b_collide = b:getColliders()
-    for j,a in ipairs( asteroids ) do
+    for j,a in ipairs( enemies_alive ) do
       a_collide = a:getColliders()
         if CheckCollision(a_collide[1],a_collide[2],a_collide[3],a_collide[4],
                           b_collide[1],b_collide[2],b_collide[3],b_collide[4] ) then
-          --print( "Collision" )
           
           a_hp = a:hit()
           if ( a_hp <= 0 ) then
             -- asteroids need to do a death animation, so they can't die here
             --table.remove(asteroids,j)
+            table.insert(enemies_dying,a)
+            table.remove(enemies_alive,j)
+            
           end
-          if ( a_hp >= 0 ) then
-            table.remove(bullets,i)
-          end
+          --if ( a_hp >= 0 ) then
+            --table.remove(bullets,i)
+          --end
+          table.remove(bullets,i)
          
-          
           --table.insert(bullets_to_remove,b)
           break
         end
@@ -181,15 +179,18 @@ function love.draw()
   love.graphics.draw(Background.image,Background.pos_x,-20,0,scale_x,scale_y)
   love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * scale_x ,-20,0,scale_x,scale_y)
   
-  for i,v in ipairs( asteroids ) do
+  for i,v in ipairs( enemies_dying ) do
     v:draw()
   end
   
+  for i,v in ipairs( enemies_alive ) do
+    v:draw()
+  end
+
   for i,v in ipairs( bullets ) do
     v:draw()
   end
   
   Player.draw()
-  --a:draw()
-  --b:draw()
+
 end

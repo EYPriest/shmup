@@ -41,12 +41,13 @@ function AsteroidBlue:init( pos )
   self.scale = 2
   self.hitFlash = 0
   self.dyingCounter = 0
+  self.dyingCounterTimeLength = 30
   
   self.hp = 10
 
-  self.STATE_ALIVE = 1
-  self.STATE_DYING = 2
-  self.STATE_DEAD = 3
+  self.STATE_ALIVE = STATE_ALIVE
+  self.STATE_DYING = STATE_DYING
+  self.STATE_DEAD = STATE_DEAD
   self.state = self.STATE_ALIVE
 
 end
@@ -61,10 +62,8 @@ function AsteroidBlue:update(dt)
   
   self.pos.x = self.pos.x - 25 * dt * scale_x
   
-  print("state: "..self.state)
   if ( self.state == self.STATE_DYING ) then
     self.dyingCounter = self.dyingCounter - 1
-    print("dyingCounter: "..self.dyingCounter)
   end
   
   
@@ -92,7 +91,7 @@ function AsteroidBlue:draw()
     self.hitFlash = self.hitFlash - 1
   
   elseif ( self.state == self.STATE_DYING ) then
-    colour_ratio = 1 / 20 * self.dyingCounter 
+    colour_ratio = 1 / self.dyingCounterTimeLength * self.dyingCounter 
     love.graphics.setColor(1,colour_ratio,colour_ratio,colour_ratio)
     love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,scale_x * self.scale,scale_y * self.scale )
     love.graphics.setColor(1,1,1,1)
@@ -122,7 +121,7 @@ function AsteroidBlue:hit()
   self.hp = self.hp - 1
   if ( (self.hp <= 0) and (self.state == self.STATE_ALIVE) ) then --TODO only run this code if alive. remove from collisions entirely if dead
     self.state = self.STATE_DYING
-    self.dyingCounter = 20
+    self.dyingCounter = self.dyingCounterTimeLength
   end
   
   return self.hp

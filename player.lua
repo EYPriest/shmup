@@ -2,8 +2,8 @@
 Player = {}
 --Player.x = 100
 --Player.y = 100
-Player.x = 20 * scale_x
-Player.y = 20 * scale_y
+Player.x = 20 * SCALE_X
+Player.y = 20 * SCALE_Y
 --Player.default_speed = 300
 Player.speed_y = 0
 Player.speed_boost = -280
@@ -60,7 +60,31 @@ function Player:keypressed(key)
 end
 
 function Player:mousepressed(x,y,button,istouch)
-  Player.jump()
+  --TODO: decide on controls
+  if ( button == 1 ) then
+    Player.accelerating = 1
+  else
+    Player.jump()
+  end
+  
+  --[[
+  table.insert( bullets, Bullet(
+        Vector(Player.x + Player.image:getWidth() - 3,
+        Player.y + Player.image:getHeight() / 2 - 4) ) )
+        --]]
+end
+
+function Player:mousereleased(x,y,button,istouch)
+  
+  print( "Mouse Released")
+  
+  --TODO: decide on controls
+  if ( button == 1 ) then
+    Player.accelerating = 0
+  else
+    --nothing
+  end
+  
   --[[
   table.insert( bullets, Bullet(
         Vector(Player.x + Player.image:getWidth() - 3,
@@ -84,9 +108,6 @@ function Player:keyreleased(key)
 end
 
 function Player.load()
-  --Player.image = love.graphics.newImage("res/SimpleShip1.png")
-  
-  --Player.image_ship_neutral
   
   Player.spritesheet = love.graphics.newImage("res/ShipSheet1.png")
   Player.sprites[1] = love.graphics.newQuad(0,0,18,4,Player.spritesheet:getDimensions())
@@ -121,13 +142,7 @@ function Player.update(dt)
   Player.y = Player.y + Player.speed_y * dt
   
   --Hit Top or Bottom
-  --[[
-  if Player.y < 0 then
-    Player.y = 0
-  elseif Player.y > love.graphics.getHeight() - Player.image:getHeight() then
-    Player.y = love.graphics.getHeight() - Player.image:getHeight()
-  end
-  ]]--
+
   if Player.y < 0 then
     Player.y = 0
   elseif Player.y + Player.height * Player.scale > love.graphics.getHeight() then
@@ -160,11 +175,11 @@ function Player.update(dt)
   accel_speed = 8
   max_speed = 250
   
-  accel_speed = 2 * scale_y
-  max_speed = 60 * scale_y
+  accel_speed = 2 * SCALE_Y
+  max_speed = 60 * SCALE_Y
   
-  accel_speed = 6 * scale_y
-  max_speed = 80 * scale_y
+  accel_speed = 6 * SCALE_Y
+  max_speed = 80 * SCALE_Y
   
   --Increase Speed for next time
   if ( Player.accelerating == 1 ) then
@@ -185,5 +200,5 @@ function Player.update(dt)
 end
 
 function Player.draw()
-  love.graphics.draw(Player.spritesheet,Player.active_sprite , Player.x, Player.y,0,scale_x,scale_y)
+  love.graphics.draw(Player.spritesheet,Player.active_sprite , Player.x, Player.y,0,SCALE_X,SCALE_Y)
 end

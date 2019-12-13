@@ -1,18 +1,20 @@
 Class = require "hump.class"
 Vector = require 'hump.vector'
 
-scale_x = love.graphics.getWidth() / 240
-scale_y = love.graphics.getHeight() / 160
-SCALE_GLOBAL = scale_x
+SCALE_X = love.graphics.getWidth() / 240
+SCALE_Y = love.graphics.getHeight() / 160
+SCALE_GLOBAL = SCALE_X
 
 STATE_ALIVE = 1
 STATE_DYING = 2
 STATE_DEAD = 3
 
+require "enemy"
 require "player"
 require "asteroid"
 require "asteroid-blue"
 require "bullet"
+require "enemy1"
 
 --TODO: uncapitalize??
 Background = {}
@@ -21,11 +23,18 @@ Background.image_copy = nil
 Background.pos_x = 0
 --Background.scale = 4
 
+
 --asteroids = {}
-entities_alive = {}
-entities_dying = {}
+--entities_alive = {}
+--entities_dying = {}
+
+--Asteroid stuff
 asteroid_time_accumulator = 0
 asteroid_spawn_time = 1
+
+--Enemy Ship stuff
+enemy_ship_time_accumulator = 0
+enemy_ship_spawn_time = 2
 
 bullets = {}
 enemies_alive = {}
@@ -44,6 +53,10 @@ end
 
 function love.mousepressed(x,y,button,istouch)
     Player:mousepressed(x,y,button,istouch)
+end
+
+function love.mousereleased(x,y,button,istouch)
+    Player:mousereleased(x,y,button,istouch)
 end
 
 
@@ -77,6 +90,14 @@ function love.update(dt)
   if ( asteroid_time_accumulator > asteroid_spawn_time ) then
     asteroid_time_accumulator = asteroid_time_accumulator - asteroid_spawn_time
     table.insert( enemies_alive, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
+    --table.insert( asteroids, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
+  end
+  
+  --Create Enemy Ships
+  enemy_ship_time_accumulator = enemy_ship_time_accumulator + dt
+  if ( enemy_ship_time_accumulator > enemy_ship_spawn_time ) then
+    enemy_ship_time_accumulator = enemy_ship_time_accumulator - enemy_ship_spawn_time
+    table.insert( enemies_alive, EnemyShip( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
     --table.insert( asteroids, AsteroidBlue( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
   end
   
@@ -116,7 +137,7 @@ function love.update(dt)
   
   --Move Background
   Background.pos_x = Background.pos_x - 1
-  if ( Background.pos_x < Background.image:getWidth() * -1 * scale_x ) then
+  if ( Background.pos_x < Background.image:getWidth() * -1 * SCALE_X ) then
     Background.pos_x = 0
   end
   
@@ -176,8 +197,8 @@ function love.draw()
   --love.graphics.setColor(1.0,0.0,1.0,1.0)
   --love.graphics.draw(Background.image,Background.pos_x,-20,0,Background.scale,Background.scale)
   --love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * Background.scale ,-20,0,4,4)
-  love.graphics.draw(Background.image,Background.pos_x,-20,0,scale_x,scale_y)
-  love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * scale_x ,-20,0,scale_x,scale_y)
+  love.graphics.draw(Background.image,Background.pos_x,-20,0,SCALE_X,SCALE_Y)
+  love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * SCALE_X ,-20,0,SCALE_X,SCALE_Y)
   
   for i,v in ipairs( enemies_dying ) do
     v:draw()

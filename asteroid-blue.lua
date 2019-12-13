@@ -60,7 +60,7 @@ end
 
 function AsteroidBlue:update(dt)
   
-  self.pos.x = self.pos.x - 25 * dt * scale_x
+  self.pos.x = self.pos.x - 25 * dt * SCALE_X
   
   if ( self.state == self.STATE_DYING ) then
     self.dyingCounter = self.dyingCounter - 1
@@ -83,7 +83,7 @@ function AsteroidBlue:draw()
     --love.graphics.setColor(1,0,0,1)
     love.graphics.setShader(shaderWhiteTint)
     shaderWhiteTint:send("WhiteFactor", 0.2)
-    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,scale_x * self.scale,scale_y * self.scale )
+    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,SCALE_X * self.scale,SCALE_Y * self.scale )
     love.graphics.setShader()
     --love.graphics.setColorMask(true,true,true,true)
     --love.graphics.setColor(1,1,1,1)
@@ -93,7 +93,7 @@ function AsteroidBlue:draw()
   elseif ( self.state == self.STATE_DYING ) then
     colour_ratio = 1 / self.dyingCounterTimeLength * self.dyingCounter 
     love.graphics.setColor(1,colour_ratio,colour_ratio,colour_ratio)
-    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,scale_x * self.scale,scale_y * self.scale )
+    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,SCALE_X * self.scale,SCALE_Y * self.scale )
     love.graphics.setColor(1,1,1,1)
 
   else
@@ -102,7 +102,7 @@ function AsteroidBlue:draw()
     --shaderWhiteTint:send("WhiteFactor", 0.5)
     --shader:send("WhiteFactor", blinking and 1 or 0)
 
-    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,scale_x * self.scale,scale_y * self.scale )
+    love.graphics.draw( self.sprite, self.pos.x, self.pos.y,0,SCALE_X * self.scale,SCALE_Y * self.scale )
 
 
     --love.graphics.setShader()
@@ -112,7 +112,7 @@ function AsteroidBlue:draw()
 end
 
 function AsteroidBlue:getColliders()
-  ret = {self.pos.x,self.pos.y,self.sprite:getWidth() * scale_x * self.scale,self.sprite:getHeight() * scale_y * self.scale}
+  ret = {self.pos.x,self.pos.y,self.sprite:getWidth() * SCALE_X * self.scale,self.sprite:getHeight() * SCALE_Y * self.scale}
   return ret
 end
 

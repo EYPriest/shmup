@@ -1,19 +1,19 @@
 
 Bullet = Class{}
 
-
 function Bullet:init( pos )
   self.pos = pos
   self.sprite = love.graphics.newImage("res/fbBulletWhite2.png")
   --self.speed = 5
   --self.speed = 1.25 * SCALE_X
-  self.speed = 3 * SCALE_X
+  --self.speed = 3 * SCALE_X
+  self.speed = 200 * SCALE_X
   self.scale = 0.4
   
 end
 
 function Bullet:update(dt)
-  self.pos.x = self.pos.x + self.speed
+  self.pos.x = self.pos.x + self.speed * dt
 end
 
 function Bullet:draw()
@@ -25,3 +25,5 @@ function Bullet:getColliders()
   ret = {self.pos.x,self.pos.y,self.sprite:getWidth(),self.sprite:getHeight()}
   return ret
 end
+
+return Bullet

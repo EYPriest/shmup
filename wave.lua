@@ -23,7 +23,7 @@ function Wave:update(dt)
   if ( self.spawn_accumulator > self.current_spawn_time ) then
     self.spawn_accumulator = self.spawn_accumulator - self.current_spawn_time
     self.current_spawn_time = self.spawn_time
-    table.insert( enemies_alive, self.enemy_type( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight()) ) ) )
+    table.insert( enemies_alive, self.enemy_type( Vector(love.graphics.getWidth() + 1, love.math.random(love.graphics.getHeight() * SCALE) ) ) )
     self.size = self.size - 1
   end
   

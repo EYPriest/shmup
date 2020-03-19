@@ -1,119 +1,114 @@
 ###############################################################################################################
-#####  ProFi, a lua profiler. This profile was generated on: 01/28/20 00:30:41
+#####  ProFi, a lua profiler. This profile was generated on: 01/29/20 18:41:35
 #####  ProFi is created by Luke Perkin 2012 under the MIT Licence, www.locofilm.co.uk
 #####  Version 1.3. Get the most recent version at this gist: https://gist.github.com/2838755
 ###############################################################################################################
 
-| TOTAL TIME = 24.112000
+| TOTAL TIME = 5.224000
 | FILE                                              : FUNCTION                                : LINE                : TIME        : RELATIVE    : CALLED      |
-| [string "boot.lua"]                               : anonymous                               :  493                : 24.022      : 99.63%      :    1430     |
-| main.lua                                          : update                                  :  131                : 11.100      : 46.04%      :    1429     |
-| main.lua                                          : draw                                    :  312                : 1.962       : 8.14%       :    1429     |
-| main.lua                                          : CheckCollision                          :  300                : 1.658       : 6.88%       :  651323     |
-| enemy.lua                                         : getColliders                            :   86                : 1.635       : 6.78%       :  650069     |
-| bullet.lua                                        : getColliders                            :   24                : 0.660       : 2.74%       :   85232     |
-| bullet.lua                                        : draw                                    :   19                : 0.603       : 2.50%       :   85232     |
-| player.lua                                        : update                                  :  139                : 0.275       : 1.14%       :    1429     |
-| hump/class.lua                                    : Bullet                                  :   77                : 0.272       : 1.13%       :    1429     |
-| player.lua                                        : shoot                                   :  130                : 0.272       : 1.13%       :    1429     |
-| bullet.lua                                        : init                                    :    4                : 0.271       : 1.12%       :    1429     |
-| bullet.lua                                        : update                                  :   15                : 0.243       : 1.01%       :   85660     |
-| enemy.lua                                         : draw                                    :   58                : 0.194       : 0.80%       :   12860     |
-| enemy.lua                                         : drawShip                                :   44                : 0.097       : 0.40%       :   12860     |
-| hump/class.lua                                    : LevelOneTerrain                         :   77                : 0.036       : 0.15%       :       1     |
-| level-1-terrain.lua                               : init                                    :    4                : 0.036       : 0.15%       :       1     |
-| level-test-1.lua                                  : load                                    :    5                : 0.036       : 0.15%       :       1     |
-| bullet_enemy.lua                                  : getColliders                            :   27                : 0.029       : 0.12%       :    3041     |
-| bullet_enemy.lua                                  : draw                                    :   22                : 0.026       : 0.11%       :    3041     |
-| bullet_enemy.lua                                  : update                                  :   18                : 0.023       : 0.10%       :    3046     |
-| player.lua                                        : getColliders                            :  324                : 0.017       : 0.07%       :    5716     |
-| player.lua                                        : draw                                    :  292                : 0.013       : 0.05%       :    1429     |
-| terrain.lua                                       : update                                  :   12                : 0.008       : 0.03%       :    1429     |
-| spin_ship.lua                                     : update                                  :   44                : 0.003       : 0.01%       :    1999     |
-| enemy.lua                                         : hit                                     :   93                : 0.003       : 0.01%       :     428     |
-| enemy.lua                                         : update                                  :   30                : 0.002       : 0.01%       :   11446     |
-| wave.lua                                          : update                                  :   20                : 0.002       : 0.01%       :     361     |
-| hump/class.lua                                    : enemy_type                              :   77                : 0.002       : 0.01%       :      15     |
-| spin_ship.lua                                     : init                                    :    6                : 0.002       : 0.01%       :      15     |
-| level-test-1.lua                                  : update                                  :   13                : 0.002       : 0.01%       :    1429     |
-| bullet_enemy.lua                                  : init                                    :    5                : 0.001       : 0.00%       :      31     |
-| hump/class.lua                                    : BulletEnemy                             :   77                : 0.001       : 0.00%       :      31     |
-| enemy_ship.lua                                    : update                                  :   26                : 0.001       : 0.00%       :    2130     |
-| asteroid-blue.lua                                 : init                                    :    4                : 0.000       : 0.00%       :      30     |
-| [C]                                               : tonumber                                :   -1                : 0.000       : 0.00%       :      57     |
-| [C]                                               : random                                  :   -1                : 0.000       : 0.00%       :      57     |
-| main.lua                                          : anonymous                               :  105                : 0.000       : 0.00%       :      27     |
-| hump/class.lua                                    : AsteroidBlue                            :   77                : 0.000       : 0.00%       :      30     |
-| [C]                                               : points                                  :   -1                : 0.000       : 0.00%       :   13402     |
-| [C]                                               : floor                                   :   -1                : 0.000       : 0.00%       :      57     |
-| [string "wrap_RandomGenerator.lua"]               : random                                  :   33                : 0.000       : 0.00%       :      57     |
-| [string "boot.lua"]                               : anonymous                               :  161                : 0.000       : 0.00%       :      27     |
-| [C]                                               : type                                    :   -1                : 0.000       : 0.00%       :      57     |
-| main.lua                                          : anonymous                               :  109                : 0.000       : 0.00%       :      27     |
-| [C]                                               : remove                                  :   -1                : 0.000       : 0.00%       :    1475     |
-| wave.lua                                          : init                                    :    4                : 0.000       : 0.00%       :       4     |
-| hump/class.lua                                    : Wave                                    :   77                : 0.000       : 0.00%       :       4     |
-| player.lua                                        : takeHit                                 :  332                : 0.000       : 0.00%       :       2     |
-| main.lua                                          : PlayerHit                               :  460                : 0.000       : 0.00%       :      46     |
-| [C]                                               : sin                                     :   -1                : 0.000       : 0.00%       :    1999     |
-| other/ProFi.lua                                   : stop                                    :   85                : 0.000       : 0.00%       :       1     |
-| main.lua                                          : quit                                    :  492                : 0.000       : 0.00%       :       1     |
-| other/ProFi.lua                                   : shouldReturn                            :  199                : 0.000       : 0.00%       :       1     |
-| player.lua                                        : mousepressed                            :   72                : 0.000       : 0.00%       :      27     |
-| main.lua                                          : AddBullet                               :  455                : 0.000       : 0.00%       :      31     |
-| [C]                                               : rad                                     :   -1                : 0.000       : 0.00%       :      12     |
-| player.lua                                        : mousereleased                           :   87                : 0.000       : 0.00%       :      27     |
-| [C]                                               : __index                                 :   -1                : 0.000       : 0.00%       :      57     |
-| [string "boot.lua"]                               : anonymous                               :  164                : 0.000       : 0.00%       :      27     |
-| enemy.lua                                         : die                                     :  106                : 0.000       : 0.00%       :      35     |
-| [C]                                               : setShader                               :   -1                : 0.000       : 0.00%       :     940     |
-| hump/class.lua                                    : EnemyShip                               :   77                : 0.000       : 0.00%       :      12     |
-| [C]                                               : send                                    :   -1                : 0.000       : 0.00%       :     470     |
-| enemy_ship.lua                                    : init                                    :    4                : 0.000       : 0.00%       :      12     |
-| [string "wrap_RandomGenerator.lua"]               : random                                  :   75                : 0.000       : 0.00%       :      57     |
+| [string "boot.lua"]                               : anonymous                               :  493                : 5.178       : 99.12%      :     305     |
+| main.lua                                          : update                                  :  152                : 0.312       : 5.97%       :     304     |
+| main.lua                                          : draw                                    :  339                : 0.180       : 3.45%       :     304     |
+| enemy.lua                                         : getColliders                            :   86                : 0.046       : 0.88%       :   11861     |
+| player.lua                                        : update                                  :  140                : 0.040       : 0.77%       :     304     |
+| player.lua                                        : shoot                                   :  131                : 0.039       : 0.75%       :      51     |
+| hump/class.lua                                    : Bullet                                  :   77                : 0.038       : 0.73%       :      51     |
+| bullet.lua                                        : init                                    :    4                : 0.038       : 0.73%       :      51     |
+| level-forest2-test.lua                            : draw                                    :   91                : 0.036       : 0.69%       :     304     |
+| level.lua                                         : draw                                    :   31                : 0.034       : 0.65%       :     304     |
+| main.lua                                          : CheckCollision                          :  327                : 0.028       : 0.54%       :   12030     |
+| level-forest2-test.lua                            : change_size                             :  117                : 0.025       : 0.48%       :       2     |
+| main.lua                                          : anonymous                               :  122                : 0.025       : 0.48%       :       4     |
+| button-switch-res.lua                             : mousereleased                           :   40                : 0.025       : 0.48%       :       4     |
+| bullet.lua                                        : getColliders                            :   24                : 0.025       : 0.48%       :    2747     |
+| bullet.lua                                        : draw                                    :   19                : 0.022       : 0.42%       :    2747     |
+| enemy.lua                                         : draw                                    :   58                : 0.021       : 0.40%       :    1112     |
+| enemy.lua                                         : drawShip                                :   44                : 0.013       : 0.25%       :    1112     |
+| button-switch-res.lua                             : draw                                    :   23                : 0.005       : 0.10%       :     304     |
+| player.lua                                        : getColliders                            :  247                : 0.005       : 0.10%       :     912     |
+| bullet_enemy.lua                                  : getColliders                            :   28                : 0.004       : 0.08%       :     169     |
+| player.lua                                        : draw                                    :  219                : 0.004       : 0.08%       :     304     |
+| level-forest2-test.lua                            : init                                    :    3                : 0.003       : 0.06%       :       1     |
+| hump/class.lua                                    : LevelForest2Test                        :   77                : 0.003       : 0.06%       :       1     |
+| bullet_enemy.lua                                  : draw                                    :   23                : 0.001       : 0.02%       :     169     |
+| level-forest2-test.lua                            : update                                  :   45                : 0.001       : 0.02%       :     304     |
+| level.lua                                         : update                                  :   11                : 0.001       : 0.02%       :     304     |
+| enemy.lua                                         : hit                                     :   93                : 0.001       : 0.02%       :      18     |
 | other/ProFi.lua                                   : startHooks                              :  234                : 0.000       : 0.00%       :       0     |
-| [C]                                               : sleep                                   :   -1                : 0.000       : 0.00%       :    1429     |
-| main.lua                                          : load                                    :  113                : 0.000       : 0.00%       :       0     |
-| [C]                                               : insert                                  :   -1                : 0.000       : 0.00%       :    1557     |
-| enemy.lua                                         : init                                    :    3                : 0.000       : 0.00%       :      58     |
-| terrain.lua                                       : init                                    :    4                : 0.000       : 0.00%       :       1     |
-| [C]                                               : step                                    :   -1                : 0.000       : 0.00%       :    1430     |
+| hump/class.lua                                    : AsteroidBlue                            :   77                : 0.000       : 0.00%       :       6     |
+| [string "wrap_RandomGenerator.lua"]               : random                                  :   33                : 0.000       : 0.00%       :       8     |
+| [C]                                               : type                                    :   -1                : 0.000       : 0.00%       :       8     |
+| [string "wrap_Math.lua"]                          : random                                  :   37                : 0.000       : 0.00%       :       8     |
+| button-switch-res.lua                             : mousepressed                            :   29                : 0.000       : 0.00%       :       4     |
+| [C]                                               : floor                                   :   -1                : 0.000       : 0.00%       :       8     |
+| [string "wrap_RandomGenerator.lua"]               : random                                  :   75                : 0.000       : 0.00%       :       8     |
+| [C]                                               : random                                  :   -1                : 0.000       : 0.00%       :       8     |
+| [C]                                               : __index                                 :   -1                : 0.000       : 0.00%       :       8     |
+| [C]                                               : tonumber                                :   -1                : 0.000       : 0.00%       :       8     |
+| asteroid-blue.lua                                 : init                                    :    4                : 0.000       : 0.00%       :       6     |
+| [C]                                               : setColor                                :   -1                : 0.000       : 0.00%       :    2562     |
+| enemy.lua                                         : update                                  :   30                : 0.000       : 0.00%       :    1112     |
+| main.lua                                          : AddBullet                               :  495                : 0.000       : 0.00%       :       4     |
+| bullet_enemy.lua                                  : init                                    :    5                : 0.000       : 0.00%       :       4     |
+| hump/class.lua                                    : BulletEnemy                             :   77                : 0.000       : 0.00%       :       4     |
+| [C]                                               : send                                    :   -1                : 0.000       : 0.00%       :      72     |
+| bullet_enemy.lua                                  : update                                  :   19                : 0.000       : 0.00%       :     169     |
+| other/ProFi.lua                                   : stop                                    :   85                : 0.000       : 0.00%       :       1     |
+| main.lua                                          : quit                                    :  536                : 0.000       : 0.00%       :       1     |
+| other/ProFi.lua                                   : shouldReturn                            :  199                : 0.000       : 0.00%       :       1     |
+| enemy.lua                                         : init                                    :    3                : 0.000       : 0.00%       :       8     |
+| [C]                                               : setShader                               :   -1                : 0.000       : 0.00%       :     144     |
+| [C]                                               : rad                                     :   -1                : 0.000       : 0.00%       :       2     |
+| [C]                                               : remove                                  :   -1                : 0.000       : 0.00%       :      42     |
+| [C]                                               : points                                  :   -1                : 0.000       : 0.00%       :    1281     |
+| player.lua                                        : mousepressed                            :   88                : 0.000       : 0.00%       :       4     |
+| enemy_ship.lua                                    : update                                  :   26                : 0.000       : 0.00%       :     260     |
+| [string "boot.lua"]                               : anonymous                               :  164                : 0.000       : 0.00%       :       4     |
+| hump/class.lua                                    : EnemyShip                               :   77                : 0.000       : 0.00%       :       2     |
+| player.lua                                        : mousereleased                           :   98                : 0.000       : 0.00%       :       4     |
+| enemy_ship.lua                                    : init                                    :    4                : 0.000       : 0.00%       :       2     |
+| main.lua                                          : anonymous                               :  117                : 0.000       : 0.00%       :       4     |
+| hump/vector.lua                                   : Vector                                  :   33                : 0.000       : 0.00%       :      63     |
+| bullet.lua                                        : update                                  :   15                : 0.000       : 0.00%       :    2765     |
+| [C]                                               : xpcall                                  :   -1                : 0.000       : 0.00%       :     305     |
+| [C]                                               : yield                                   :   -1                : 0.000       : 0.00%       :     305     |
 | [string "boot.lua"]                               : anonymous                               :  639                : 0.000       : 0.00%       :       0     |
 | [string "boot.lua"]                               : anonymous                               :  487                : 0.000       : 0.00%       :       0     |
-| [C]                                               : xpcall                                  :   -1                : 0.000       : 0.00%       :    1430     |
-| [C]                                               : yield                                   :   -1                : 0.000       : 0.00%       :    1430     |
-| [C]                                               : pump                                    :   -1                : 0.000       : 0.00%       :    1430     |
-| [C]                                               : setmetatable                            :   -1                : 0.000       : 0.00%       :    1522     |
-| hump/vector.lua                                   : Vector                                  :   33                : 0.000       : 0.00%       :    1518     |
-| player.lua                                        : load                                    :  120                : 0.000       : 0.00%       :       1     |
-| other/ProFi.lua                                   : start                                   :   67                : 0.000       : 0.00%       :       0     |
-| [C]                                               : getTime                                 :   -1                : 0.000       : 0.00%       :   11434     |
-| [C]                                               : Vector                                  :   -1                : 0.000       : 0.00%       :    1518     |
-| [C]                                               : newImage                                :   -1                : 0.000       : 0.00%       :    1521     |
-| [C]                                               : newQuad                                 :   -1                : 0.000       : 0.00%       :     124     |
-| [C]                                               : getDimensions                           :   -1                : 0.000       : 0.00%       :     124     |
-| hump/vector.lua                                   : Vector                                  :  217                : 0.000       : 0.00%       :    1518     |
-| [string "wrap_Math.lua"]                          : random                                  :   37                : 0.000       : 0.00%       :      57     |
-| [string "wrap_Event.lua"]                         : poll                                    :   25                : 0.000       : 0.00%       :    1430     |
+| [C]                                               : pump                                    :   -1                : 0.000       : 0.00%       :     305     |
+| [C]                                               : (for generator)                         :   -1                : 0.000       : 0.00%       :   33607     |
+| [string "wrap_Event.lua"]                         : poll                                    :   25                : 0.000       : 0.00%       :     305     |
 | [string "boot.lua"]                               : anonymous                               :  212                : 0.000       : 0.00%       :       1     |
-| [C]                                               : draw                                    :   -1                : 0.000       : 0.00%       :  105380     |
-| [C]                                               : translate                               :   -1                : 0.000       : 0.00%       :    1429     |
-| [C]                                               : clear                                   :   -1                : 0.000       : 0.00%       :    1429     |
-| [C]                                               : getBackgroundColor                      :   -1                : 0.000       : 0.00%       :    1429     |
-| [C]                                               : print                                   :   -1                : 0.000       : 0.00%       :   14290     |
-| [C]                                               : setColor                                :   -1                : 0.000       : 0.00%       :   69676     |
-| other/ProFi.lua                                   : stopHooks                               :  238                : 0.000       : 0.00%       :       1     |
-| [C]                                               : present                                 :   -1                : 0.000       : 0.00%       :    1429     |
-| [C]                                               : rectangle                               :   -1                : 0.000       : 0.00%       :   20366     |
-| [C]                                               : (for generator)                         :   -1                : 0.000       : 0.00%       : 1060344     |
-| [C]                                               : origin                                  :   -1                : 0.000       : 0.00%       :    1429     |
-| [C]                                               : getWidth                                :   -1                : 0.000       : 0.00%       :  178383     |
-| [string "boot.lua"]                               : anonymous                               :  209                : 0.000       : 0.00%       :       4     |
-| [string "boot.lua"]                               : anonymous                               :  155                : 0.000       : 0.00%       :       1     |
 | [string "boot.lua"]                               : anonymous                               :  206                : 0.000       : 0.00%       :       1     |
-| [C]                                               : isActive                                :   -1                : 0.000       : 0.00%       :    1429     |
-| [string "boot.lua"]                               : anonymous                               :  158                : 0.000       : 0.00%       :     122     |
-| [C]                                               : ipairs                                  :   -1                : 0.000       : 0.00%       :  109525     |
-| [string "boot.lua"]                               : anonymous                               :  203                : 0.000       : 0.00%       :       1     |
-| [C]                                               : getHeight                               :   -1                : 0.000       : 0.00%       :   93045     |
+| [C]                                               : step                                    :   -1                : 0.000       : 0.00%       :     305     |
+| button-switch-res.lua                             : load                                    :    4                : 0.000       : 0.00%       :       1     |
+| player.lua                                        : load                                    :  121                : 0.000       : 0.00%       :       1     |
+| other/ProFi.lua                                   : start                                   :   67                : 0.000       : 0.00%       :       0     |
+| [C]                                               : getTime                                 :   -1                : 0.000       : 0.00%       :    2434     |
+| main.lua                                          : load                                    :  127                : 0.000       : 0.00%       :       0     |
+| [C]                                               : newImage                                :   -1                : 0.000       : 0.00%       :      78     |
+| [C]                                               : newQuad                                 :   -1                : 0.000       : 0.00%       :       3     |
+| [C]                                               : getDimensions                           :   -1                : 0.000       : 0.00%       :       3     |
+| [C]                                               : setmetatable                            :   -1                : 0.000       : 0.00%       :      64     |
+| [string "boot.lua"]                               : anonymous                               :  161                : 0.000       : 0.00%       :       4     |
+| [string "boot.lua"]                               : anonymous                               :  155                : 0.000       : 0.00%       :       1     |
+| [string "boot.lua"]                               : anonymous                               :  158                : 0.000       : 0.00%       :     107     |
+| [C]                                               : sleep                                   :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : present                                 :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : pop                                     :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : print                                   :   -1                : 0.000       : 0.00%       :    3040     |
+| hump/vector.lua                                   : Vector                                  :  217                : 0.000       : 0.00%       :      63     |
+| [C]                                               : Vector                                  :   -1                : 0.000       : 0.00%       :      63     |
+| other/ProFi.lua                                   : stopHooks                               :  238                : 0.000       : 0.00%       :       1     |
+| [C]                                               : insert                                  :   -1                : 0.000       : 0.00%       :      63     |
+| [string "boot.lua"]                               : anonymous                               :  209                : 0.000       : 0.00%       :       4     |
+| [C]                                               : draw                                    :   -1                : 0.000       : 0.00%       :    7068     |
+| [C]                                               : push                                    :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : getHeight                               :   -1                : 0.000       : 0.00%       :    3948     |
+| [C]                                               : getWidth                                :   -1                : 0.000       : 0.00%       :    8441     |
+| [C]                                               : ipairs                                  :   -1                : 0.000       : 0.00%       :    7915     |
+| [C]                                               : translate                               :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : isActive                                :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : getBackgroundColor                      :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : origin                                  :   -1                : 0.000       : 0.00%       :     304     |
+| [C]                                               : clear                                   :   -1                : 0.000       : 0.00%       :     304     |
 | [C]                                               : sethook                                 :   -1                : 0.000       : 0.00%       :       1     |

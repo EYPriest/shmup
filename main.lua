@@ -1,15 +1,38 @@
 Class = require "hump.class"
 Vector = require 'hump.vector'
 
+local lg = love.graphics
+
+
 local ProFi = require "other.ProFi"
+--local profiler = require ("other.profiler")
+local piefiller = require("other.Piefiller-master.piefiller")
 --ProFi:start()
 
 --Constants
+--SCALE_GLOBAL = SCALE_X
+
 --SCALE_X = love.graphics.getWidth() / 240
 --SCALE_Y = love.graphics.getHeight() / 160
-SCALE_X = love.graphics.getWidth() / 240
-SCALE_Y = love.graphics.getHeight() / 160
---SCALE_GLOBAL = SCALE_X
+
+SCALE = love.graphics.getWidth() / 240
+--SCALE = love.graphics.getWidth() / 200
+print(SCALE)
+--SCALE = love.graphics.getWidth() / 180
+--SCALE = love.graphics.getWidth() / 250
+
+--SCALE = love.graphics.getWidth() / 240
+
+--print ( "love.graphics.getWidth() : " .. love.graphics.getWidth() )
+--print ( "love.graphics.getHeight() : " .. love.graphics.getHeight() )
+
+--TODO: actually I should probably only use SCALE_GLOBAL
+--       despite my previous change to using 2 scales.
+--       might be a good idea to just show more
+--       on screen vertically, with slightly less scrolling.
+
+--TODO: so i need to decide on a default ratio, and scale based on that.
+--       originally i used 3:2, but that could change?
 
 --Enemy States
 STATE_ALIVE = 1
@@ -21,25 +44,62 @@ GAMESTATE_RUNNING = 1
 GAMESTATE_GAMEOVER = 2
 gamestate = GAMESTATE_RUNNING
 
+--Collider Types
+COLLIDER_TYPE_RECT_AA = 1
+COLLIDER_TYPE_RECT_ROTATED = 2
+COLLIDER_TYPE_CIRCLE = 3
+
+--Set scale algorithm before importing sprites
+love.graphics.setDefaultFilter("nearest","nearest")
+
 --Files
 require "shaders"
-require "player"
-require "bullet"
-require "enemy"
-require "bullet_enemy"
---require "asteroid"
-require "asteroid-blue"
-require "enemy_ship"
-require "spin_ship"
-require "level-test-1"
 require "wave"
-require "terrain"
-require "level-1-terrain"
+require "button-switch-res"
+--Enemies
+require "enemies/enemy"
+--require "asteroid"
+require "enemies/enemy-asteroid-blue"
+require "enemies/enemy_ship"
+require "enemies/enemy-spin_ship"
+require "enemies/enemy-CShape"
+require "enemies/enemy-CircleSpinner"
+require "enemies/enemy-Bird"
+require "enemies/enemy-GreenTriangle"
+require "enemies/enemy-ForwardC"
+require "enemies/junkers/enemy-junker-droid"
+--Levels plus Terrain
+require "levels/level"
+require "levels/terrain"
+require "levels/level-test-1"
+require "levels/level-1-terrain"
+require "levels/level-sky-test"
+require "levels/level-forest2-test"
+require "levels/level-junker-test"
+--Bullets
+require "bullets/bullet"
+require "bullets/bullet_enemy"
+require "bullets/bullet_pink"
+require "bullets/bullet_red"
+require "bullets/bullet_big_laser"
+require "bullets/bullet_laser_small"
+--Weapons
+require "weapons/weapon-laser"
+require "weapons/weapon-point_defence"
+--Shots
+require "shots/shot-bullet_white"
+require "shots/shot-laser_blue"
+require "shots/shot-point_laser"
+
+--Player
+--TODO: this has to be last rn because it loads weapons immediately
+require "player"
+
 
 --Debug Constants
 DEBUG_SHOW_HITBOXES = true
 DEBUG_SHOW_ORIGIN = true
-DEBUG_SHOW_STATS = true
+DEBUG_SHOW_STATS = false
 --DEBUG_STATS_ACCUMULATOR = 0
 
 debug_time_t1 = nil
@@ -56,17 +116,19 @@ debug_time_accumulator = 0
 
 
 --TODO: uncapitalize??
+--[[
 Background = {}
 Background.image = nil
 Background.image_copy = nil
 Background.pos_x = 0
+--]]
 
 --Camera stuff
 camera_offset_y = 0
 
 --Asteroid stuff
 asteroid_time_accumulator = 0
-asteroid_spawn_time = 0.8
+asteroid_spawn_time = 2
 
 --Enemy Ship stuff
 enemy_ship_time_accumulator = 0
@@ -75,6 +137,26 @@ enemy_ship_spawn_time = 2
 --Spin Ship stuff
 spin_ship_time_accumulator = 0
 spin_ship_spawn_time = 6
+
+--C Ship stuff
+c_ship_time_accumulator = 0
+c_ship_spawn_time = 5
+
+--Bird Ship stuff
+bird_ship_time_accumulator = 0
+bird_ship_spawn_time = 3
+
+--Circle Spinner Ship stuff
+circle_spinner_ship_time_accumulator = 0
+circle_spinner_ship_spawn_time = 5
+
+--C Forward Ship stuff
+forward_c_time_accumulator = 0
+forward_c_spawn_time = 2
+
+--Green Triangle Ship stuff
+green_triangle_time_accumulator = 0
+green_triangle_spawn_time = 3
 
 --Entity Collections
 bullets_from_player = {}
@@ -88,6 +170,8 @@ terrains = {}
 screen_flash = 0
 screen_flash_time = 1
 
+current_level = nil
+
 --Inputs
 function love.keypressed(key)
   
@@ -96,6 +180,8 @@ function love.keypressed(key)
   else
     Player:keypressed(key)
   end
+  
+  --Pie:keypressed(key)
 end
 
 function love.keyreleased(key)
@@ -104,10 +190,14 @@ end
 
 function love.mousepressed(x,y,button,istouch)
     Player:mousepressed(x,y,button,istouch)
+    ButtonSwitchRes:mousepressed(x,y,button,istouch)
+    
+    --Pie:mousepressed(x,y,button,istouch)
 end
 
 function love.mousereleased(x,y,button,istouch)
     Player:mousereleased(x,y,button,istouch)
+    ButtonSwitchRes:mousereleased(x,y,button,istouch)
 end
 
 function love.load()
@@ -116,19 +206,35 @@ function love.load()
   
   --love.graphics.setDefaultFilter( min, mag, anisotropy )
   --love.graphics.setDefaultFilter( "nearest" )
-  love.graphics.setDefaultFilter("nearest","nearest")
+  --love.graphics.setDefaultFilter("nearest","nearest")
   
-  ProFi:start()
+  --ProFi:start()
+  --profilerStart()
+  --Pie = piefiller:new()
   
   Player.load()
   --Asteroid:load()
-  Background.image = love.graphics.newImage("res/parallax-space-backgound.png")
-  Background.image_copy = love.graphics.newImage("res/parallax-space-backgound.png")
   
-  LevelTest1.load()
+  
+  --LevelTest1.load()
+  --current_level = LevelSkyTest()
+  --current_level = LevelTest1()
+  --current_level = LevelForest2Test()
+  current_level = LevelJunkerTest()
+  
+  --camera_offset_y = Player.level_height / 2 + Player.height / 2
+  
+  ButtonSwitchRes.load()
+  
 end
 
 function love.update(dt)
+  
+  --dt = dt / 4
+  
+  --Start Pie Profiler
+  --Pie:attach()
+  
   --dt = 0.1
   
   debug_time_t1 = love.timer.getTime()
@@ -144,7 +250,8 @@ function love.update(dt)
   
   debug_time_t3 = love.timer.getTime()
 
-  LevelTest1.update(dt)
+  --LevelTest1.update(dt)
+  current_level:update(dt)
   
   
   --Update Player
@@ -183,33 +290,44 @@ function love.update(dt)
   
   --Update Player Bullets
   for i,v in ipairs( bullets_from_player ) do
-    v:update(dt)
+    local v_state = v:update(dt)
     if ( v.pos.x > love.graphics.getWidth() ) then
       table.remove(bullets_from_player,i)
     end
+    
   end
   
   --Update Enemy Bullets
   for i,be in ipairs( bullets_from_enemies ) do
-    be:update(dt)
+    --TODO compare this to dead enemies, and decide what's best
+    local be_state = be:update(dt)
+    --TODO: change this for lasers
     if( be.pos.x < -10 ) then
+      table.remove(bullets_from_enemies,i)
+    end
+    if ( be_state == STATE_DEAD ) then
       table.remove(bullets_from_enemies,i)
     end
   end
   
+  --Update Level
+  
+  
   --Update Terrain
   for i,t in ipairs( terrains ) do
     t:update(dt)
-    if( t.pos.x < -11000 ) then
+    if( t.pos.x < -11000 ) then --TODO: if t.pos.x + width < 0
       table.remove(terrains,i)
     end
   end
   
+  --[[
   --Move Background
   Background.pos_x = Background.pos_x - 1
   if ( Background.pos_x < Background.image:getWidth() * -1 * SCALE_X ) then
     Background.pos_x = 0
   end
+  --]]
   
   --bullets_to_remove = {}
   
@@ -220,25 +338,25 @@ function love.update(dt)
   debug_time_t3 = love.timer.getTime()
   
   --Collision Detection
-  --Bullets from Player with Enemy Ships
+  --Player Bullets with Enemy Ships
   for i,b in ipairs( bullets_from_player ) do
-    b_collide = b:getColliders()
+    local b_collide = b:getColliders()
     for j,a in ipairs( enemies_alive ) do
-      a_collide = a:getColliders()
+      local a_collide = a:getColliders()
         if CheckCollision(a_collide[1],a_collide[2],a_collide[3],a_collide[4],
                           b_collide[1],b_collide[2],b_collide[3],b_collide[4] ) then
           
-          a_hp = a:hit()
+          a_hp = a:hit( b.damage )
           if ( a_hp <= 0 ) then
-            -- asteroids need to do a death animation, so they can't die here
-            --table.remove(asteroids,j)
+            --enemies need to do a death animation, so they can't completely die here
             table.insert(enemies_dying,a)
-            table.remove(enemies_alive,j)
-            
+            table.remove(enemies_alive,j) 
           end
+          
           --if ( a_hp >= 0 ) then
             --table.remove(bullets,i)
           --end
+          
           table.remove(bullets_from_player,i)
          
           --table.insert(bullets_to_remove,b)
@@ -248,9 +366,9 @@ function love.update(dt)
   end
   
   --Player with enemy bullets
-  p_collide = Player:getColliders()
+  local p_collide = Player:getColliders()
   for i, be in ipairs( bullets_from_enemies ) do
-    be_collide = be:getColliders()
+    local be_collide = be:getColliders()
     if CheckCollision(p_collide[1],p_collide[2],p_collide[3],p_collide[4],
                           be_collide[1],be_collide[2],be_collide[3],be_collide[4] )    then
       PlayerHit()
@@ -261,7 +379,7 @@ function love.update(dt)
   --Player with enemies alive
   p_collide = Player:getColliders()
   for i, e in ipairs( enemies_alive ) do
-    e_collide = e:getColliders()
+    local e_collide = e:getColliders()
     if CheckCollision(p_collide[1],p_collide[2],p_collide[3],p_collide[4],
                           e_collide[1],e_collide[2],e_collide[3],e_collide[4] )    then
       PlayerHit()
@@ -290,50 +408,41 @@ function love.update(dt)
   end
   --]]
   
+  -- TODO: optimize
+  -- If there are lag spikes, then it might be due to garbage collection
+  -- and this should stop spikes, but it's not ideal
+  --collectgarbage()
+  
   debug_time_t4 = love.timer.getTime()
   debug_time_adders[4] = debug_time_adders[4] + debug_time_t4 - debug_time_t3
   
   debug_time_t2 = love.timer.getTime()
   debug_time_adders[1] = debug_time_adders[1] + debug_time_t2 - debug_time_t1
   
-end
-function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
-  -- Collision detection function;
-  -- Returns true if two boxes overlap, false if they don't;
-  -- x1,y1 are the top-left coords of the first box, while w1,h1 are its width and height;
-  -- x2,y2,w2 & h2 are the same, but for the second box.
-  return x1 < x2+w2 and
-         x2 < x1+w1 and
-         y1 < y2+h2 and
-         y2 < y1+h1
+  --Stop Pie Profiler
+  --Pie:detach()
+  
 end
 
 --Draw
 function love.draw()
   
+  lg.push()
+  
   debug_time_t1 = love.timer.getTime()
   
-  --love.graphics.scale(2,2)
+  lg.translate(0,camera_offset_y)
   
-  love.graphics.translate(0,camera_offset_y)
   
-  --love.graphics.draw(Background.image,Background.pos_x,-20,0,SCALE_X,SCALE_Y)
-  --love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * SCALE_X ,-20,0,SCALE_X,SCALE_Y)
-  love.graphics.draw(Background.image,Background.pos_x,0,0,SCALE_X,SCALE_Y)
-  love.graphics.draw(Background.image,Background.pos_x + Background.image:getWidth() * SCALE_X ,0,0,SCALE_X,SCALE_Y)
-  --TODO: Remeber Why was that -20???
-  
+  current_level:draw()
   
   --love.graphics.print( text, x, y, r, sx, sy, ox, oy, kx, ky )
-  love.graphics.print( "HP = " .. Player.hp, 22, 31 - camera_offset_y, 0, 1 )
+  lg.print( "HP = " .. Player.hp, 22, 31 - camera_offset_y, 0, 1 )
   if ( DEBUG_SHOW_STATS ) then
-    --print( "enemies_alive size: " .. table.getn(enemies_alive) )
-    --print( "enemies_dying size: " .. table.getn(enemies_dying) )
-    --print( "bullets size: " .. table.getn(bullets_from_player) )
-    love.graphics.print( "enemies_alive size: " .. #enemies_alive, 22, 43 - camera_offset_y, 0, 1 )
-    love.graphics.print( "enemies_dying size: " .. #enemies_dying, 22, 55 - camera_offset_y, 0, 1 )
-    love.graphics.print( "bullets_from_player size: " .. #bullets_from_player, 22, 67 - camera_offset_y, 0, 1 )
-    love.graphics.print( "bullets_from_enemies size: " .. #bullets_from_enemies, 22, 79 - camera_offset_y, 0, 1 )
+    lg.print( "enemies_alive size: " .. #enemies_alive, 22, 43 - camera_offset_y, 0, 1 )
+    lg.print( "enemies_dying size: " .. #enemies_dying, 22, 55 - camera_offset_y, 0, 1 )
+    lg.print( "bullets_from_player size: " .. #bullets_from_player, 22, 67 - camera_offset_y, 0, 1 )
+    lg.print( "bullets_from_enemies size: " .. #bullets_from_enemies, 22, 79 - camera_offset_y, 0, 1 )
     
     debug_time_accumulator = debug_time_accumulator + 1
     if ( debug_time_accumulator > 60 ) then
@@ -348,38 +457,23 @@ function love.draw()
       debug_time_adders[3] = 0
       debug_time_adders[4] = 0
     end
-    love.graphics.print( "update total time: " .. debug_time_totals[1], 22, 91 - camera_offset_y, 0, 1 )
-    love.graphics.print( "draw total time: " .. debug_time_totals[2], 22, 103 - camera_offset_y, 0, 1 )
-    love.graphics.print( "update update time: " .. debug_time_totals[3], 22, 115 - camera_offset_y, 0, 1 )
-    love.graphics.print( "updade collision time: " .. debug_time_totals[4], 22, 127 - camera_offset_y, 0, 1 )
-    --love.graphics.print( "Player.y: " .. Player.y, 22, 139 - camera_offset_y, 0, 1 )
-    --love.graphics.print( "camera_offset_y: " .. camera_offset_y, 22, 151 - camera_offset_y, 0, 1 )
-    love.graphics.print( "dimensions: " .. love.graphics.getWidth() .. ", " .. love.graphics.getHeight(), 22, 139 - camera_offset_y, 0, 1 )
+    lg.print( "update total time: " .. debug_time_totals[1], 22, 91 - camera_offset_y, 0, 1 )
+    lg.print( "draw total time: " .. debug_time_totals[2], 22, 103 - camera_offset_y, 0, 1 )
+    lg.print( "update update time: " .. debug_time_totals[3], 22, 115 - camera_offset_y, 0, 1 )
+    lg.print( "updade collision time: " .. debug_time_totals[4], 22, 127 - camera_offset_y, 0, 1 )
+    lg.print( "dimensions: " .. lg.getWidth() .. ", " .. lg.getHeight(), 22, 139 - camera_offset_y, 0, 1 )
+    --love.graphics.print('Memory actually used (in kB): ' .. collectgarbage('count'), 10,10)
   end
   
-  --[[
   for i,t in ipairs( terrains ) do
     t:draw()
     if ( DEBUG_SHOW_HITBOXES ) then
       for i,q in ipairs( t.collision_boxes ) do
-        love.graphics.setColor(255,0,0,0.2)
-        box = q
+        lg.setColor(1,0,0,0.2)
+        local box = q
         --TODO: do scale_global multiplacion in terrain, not here
-        love.graphics.rectangle("fill", box[1] + t.pos.x, box[2] + t.pos.y, box[3], box[4] )
-        love.graphics.setColor(255,255,255,1)
-      end
-    end
-  end
-  --]]
-  for i,t in ipairs( terrains ) do
-    t:draw()
-    if ( DEBUG_SHOW_HITBOXES ) then
-      for i,q in ipairs( t.collision_boxes ) do
-        love.graphics.setColor(1,0,0,0.2)
-        box = q
-        --TODO: do scale_global multiplacion in terrain, not here
-        love.graphics.rectangle("fill", box[1] + t.pos.x, box[2] + t.pos.y, box[3], box[4] )
-        love.graphics.setColor(1,1,1,1)
+        lg.rectangle("fill", box[1] + t.pos.x, box[2] + t.pos.y, box[3], box[4] )
+        lg.setColor(1,1,1,1)
       end
     end
   end
@@ -391,40 +485,73 @@ function love.draw()
   for i,v in ipairs( enemies_alive ) do
     v:draw()
     if ( DEBUG_SHOW_HITBOXES ) then
-      love.graphics.setColor(1,0,0,0.2)
-      box = v:getColliders()
-      love.graphics.rectangle("fill", box[1], box[2], box[3], box[4] )
-      love.graphics.setColor(1,1,1,1)
+      lg.setColor(1,0,0,0.2)
+      local box = v:getColliders()
+      lg.rectangle("fill", box[1], box[2], box[3], box[4] )
+      lg.setColor(1,1,1,1)
     end
     if ( DEBUG_SHOW_ORIGIN ) then
-      love.graphics.setColor(0,0.5,0,1)
-      love.graphics.points(v.pos.x,v.pos.y)
-      love.graphics.setColor(1,1,1,1)
+      lg.setColor(0,0.5,0,1)
+      lg.points(v.pos.x,v.pos.y)
+      lg.setColor(1,1,1,1)
     end
   end
   if ( DEBUG_SHOW_HITBOXES ) then
-      love.graphics.setColor(1,0,0,0.2)
-      box = Player:getColliders()
-      love.graphics.rectangle("fill", box[1], box[2], box[3], box[4] )
-      love.graphics.setColor(1,1,1,1)
+      lg.setColor(1,0,0,0.2)
+      local box = Player:getColliders()
+      lg.rectangle("fill", box[1], box[2], box[3], box[4] )
+      lg.setColor(1,1,1,1)
     end
 
   for i,v in ipairs( bullets_from_player ) do
     v:draw()
+    if ( DEBUG_SHOW_HITBOXES ) then
+      lg.setColor(1,0,0,0.2)
+      local box = v:getColliders()
+      lg.rectangle("fill", box[1], box[2], box[3], box[4] )
+      lg.setColor(1,1,1,1)
+    end
+    if ( DEBUG_SHOW_ORIGIN ) then
+      lg.setColor(0,1,0,1)
+      lg.points(v.pos.x,v.pos.y)
+      lg.setColor(1,1,1,1)
+    end
   end
   
   for i,v in ipairs( bullets_from_enemies ) do
     v:draw()
+    if ( DEBUG_SHOW_HITBOXES ) then
+      lg.setColor(1,0,0,0.2)
+      local box = v:getColliders()
+
+      local rot = v.rotation_rad
+      lg.push()
+      lg.translate(box[1]+box[3]/2,box[2]+box[4]/2)
+      lg.rotate(rot)
+      lg.translate(-(box[1]+box[3]/2),-(box[2]+box[4]/2))
+      lg.rectangle("fill", box[1], box[2], box[3], box[4] )
+      lg.pop()
+      
+      lg.setColor(1,1,1,1)
+    end
     if ( DEBUG_SHOW_ORIGIN ) then
-      love.graphics.setColor(0,1,0,1)
-      love.graphics.points(v.pos.x,v.pos.y)
-      love.graphics.setColor(1,1,1,1)
+      lg.setColor(0,1,0,1)
+      lg.points(v.pos.x,v.pos.y)
+      lg.setColor(1,1,1,1)
     end
   end
   
   --love.graphics.setColor(0.5,0.5,0.5,1)
   
   Player.draw()
+  if ( DEBUG_SHOW_ORIGIN ) then
+    lg.setColor(0,1,0,1)
+    lg.points(Player.pos.x,Player.pos.y)
+    lg.setColor(1,1,1,1)
+    end
+  
+  --current_level:draw()
+  current_level:drawForeground()
   
   --[[
   if ( DEBUG_SHOW_STATS ) then
@@ -438,12 +565,23 @@ function love.draw()
   end
   --]]
   
+  --current_level:drawForeground()
+  
+  love.graphics.pop()
+  ButtonSwitchRes.draw()
+  
+  --Draw Pie Profiler
+  --Pie:draw()
+  
+  --print( 'Memory actually used (in kB): ' .. collectgarbage('count') )
+  
   if ( screen_flash > 0 ) then
-    love.graphics.setColor(1,0.9,0.9,1)
+    lg.setColor(1,0.9,0.9,1)
     --ffbf00
     --love.graphics.setColor(
-    love.graphics.rectangle("fill", 0, -camera_offset_y, love.graphics.getWidth(), love.graphics.getHeight() )
-    love.graphics.setColor(1,1,1,1)
+    --love.graphics.rectangle("fill", 0, -camera_offset_y, love.graphics.getWidth(), love.graphics.getHeight() )
+    lg.rectangle("fill", 0, 0, lg.getWidth(), lg.getHeight() )
+    lg.setColor(1,1,1,1)
     screen_flash = screen_flash - 1
   end
   
@@ -452,7 +590,31 @@ function love.draw()
   
 end
 
-function AddBullet( self,b )
+--AABB to AABB
+function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+  -- Collision detection function;
+  -- Returns true if two boxes overlap, false if they don't;
+  -- x1,y1 are the top-left coords of the first box, while w1,h1 are its width and height;
+  -- x2,y2,w2 & h2 are the same, but for the second box.
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
+end
+
+function CheckCollision_SAT(x1,y1,w1,h1, x2,y2,w2,h2)
+  -- Collision detection function;
+  -- Returns true if two boxes overlap, false if they don't;
+  -- x1,y1 are the top-left coords of the first box, while w1,h1 are its width and height;
+  -- x2,y2,w2 & h2 are the same, but for the second box.
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
+end
+
+--TODO: do i need this? it basicaly doesn't do anything...
+function AddBullet( b )
   table.insert(bullets_from_enemies, b)
   --print("addBullet")
 end
@@ -478,19 +640,26 @@ function Restart()
   enemies_dying = {}
   bullets_from_enemies = {}
   bullets_from_player = {}
+  terrains = {}
   
-  Background.pos_x = 0
+  --Background.pos_x = 0
   asteroid_time_accumulator = 0
   enemy_ship_time_accumulator = 0
   DEBUG_STATS_ACCUMULATOR = 0
-  
   --TODO: make player an object, so I can just make a new instance of it
   --Player.load()
   Player.hp = Player.hp_max
+  Player.pos.y = 20 * SCALE
+  camera_offset_y = 0
+  
+  --current_level = LevelSkyTest()
 end
 
 function love.quit()
   ProFi:stop()
   ProFi:writeReport()
+  
+  --profilerStop()
+  --profilerReport("profiler.log")
 end
 
